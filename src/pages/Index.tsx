@@ -288,7 +288,44 @@ const Index = () => {
 
         {/* Graph + Analysis */}
         <div className="space-y-4">
-          <GraphVisualizer graph={cityGraph} edges={cityEdges} pathNodes={displayPath} />
+          <GraphVisualizer
+            graph={cityGraph}
+            edges={cityEdges}
+            pathNodes={displayPath}
+            fullscreenControls={
+              <div className="panel-glass rounded-lg p-3 space-y-2 min-w-[240px]">
+                <div className="space-y-1">
+                  <label className="text-[10px] text-muted-foreground font-mono">Start Point</label>
+                  <select
+                    value={source}
+                    onChange={(e) => setSource(e.target.value)}
+                    className="w-full rounded-md border border-border bg-secondary px-2 py-1 text-xs text-secondary-foreground font-mono focus:outline-none focus:ring-1 focus:ring-primary"
+                  >
+                    <option value="">Select…</option>
+                    {nodeIds.map((id) => (
+                      <option key={id} value={id}>{id} — {labelFor(id)}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] text-muted-foreground font-mono">Destination</label>
+                  <select
+                    value={target}
+                    onChange={(e) => setTarget(e.target.value)}
+                    className="w-full rounded-md border border-border bg-secondary px-2 py-1 text-xs text-secondary-foreground font-mono focus:outline-none focus:ring-1 focus:ring-primary"
+                  >
+                    <option value="">Select…</option>
+                    {nodeIds.map((id) => (
+                      <option key={id} value={id}>{id} — {labelFor(id)}</option>
+                    ))}
+                  </select>
+                </div>
+                <Button onClick={handleFindPath} size="sm" className="w-full gap-1 text-xs">
+                  <Route className="h-3 w-3" /> Find Path
+                </Button>
+              </div>
+            }
+          />
 
           {showAnalysis && (
             <div className="panel-glass rounded-lg p-6 space-y-4 text-sm font-mono">

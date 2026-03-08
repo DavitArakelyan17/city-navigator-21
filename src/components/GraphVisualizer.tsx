@@ -162,6 +162,11 @@ const GraphVisualizer = ({ graph, edges, pathNodes = [], fullscreenControls }: G
       >
         {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
       </button>
+      {isFullscreen && fullscreenControls && (
+        <div className="absolute top-3 left-3 z-10">
+          {fullscreenControls}
+        </div>
+      )}
       <canvas ref={canvasRef} className="mx-auto block" />
     </div>
   );
