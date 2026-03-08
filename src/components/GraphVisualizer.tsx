@@ -6,9 +6,10 @@ interface GraphVisualizerProps {
   graph: Graph;
   edges: { from: string; to: string; weight: number }[];
   pathNodes?: string[];
+  fullscreenControls?: React.ReactNode;
 }
 
-const GraphVisualizer = ({ graph, edges, pathNodes = [] }: GraphVisualizerProps) => {
+const GraphVisualizer = ({ graph, edges, pathNodes = [], fullscreenControls }: GraphVisualizerProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -161,6 +162,11 @@ const GraphVisualizer = ({ graph, edges, pathNodes = [] }: GraphVisualizerProps)
       >
         {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
       </button>
+      {isFullscreen && fullscreenControls && (
+        <div className="absolute top-3 left-3 z-10">
+          {fullscreenControls}
+        </div>
+      )}
       <canvas ref={canvasRef} className="mx-auto block" />
     </div>
   );
