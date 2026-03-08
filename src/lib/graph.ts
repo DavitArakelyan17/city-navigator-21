@@ -59,8 +59,39 @@ export function dijkstra(graph: Graph, source: string, target: string): PathResu
   const prev = new Map<string, string | null>();
   const visited = new Set<string>();
 
-  // Min-heap using array (simple but correct)
-  const pq: { node: string; cost: number }[] = [];
+  // Binary min-heap for O(log V) insert/extract
+  const heap: { node: string; cost: number }[] = [];
+
+  const heapPush = (entry: { node: string; cost: number }) => {
+    heap.push(entry);
+    let i = heap.length - 1;
+    while (i > 0) {
+      const parent = (i - 1) >> 1;
+      if (heap[parent].cost <= heap[i].cost) break;
+      [heap[parent], heap[i]] = [heap[i], heap[parent]];
+      i = parent;
+    }
+  };
+
+  const heapPop = (): { node: string; cost: number } => {
+    const top = heap[0];
+    const last = heap.pop()!;
+    if (heap.length > 0) {
+      heap[0] = last;
+      let i = 0;
+      const n = heap.length;
+      while (true) {
+        let smallest = i;
+        const l = 2 * i + 1, r = 2 * i + 2;
+        if (l < n && heap[l].cost < heap[smallest].cost) smallest = l;
+        if (r < n && heap[r].cost < heap[smallest].cost) smallest = r;
+        if (smallest === i) break;
+        [heap[smallest], heap[i]] = [heap[i], heap[smallest]];
+        i = smallest;
+      }
+    }
+    return top;
+  };
 
   for (const node of graph.nodes) {
     dist.set(node.id, Infinity);
@@ -76,26 +107,25 @@ export function dijkstra(graph: Graph, source: string, target: string): PathResu
   }
 
   dist.set(source, 0);
-  pq.push({ node: source, cost: 0 });
+  heapPush({ node: source, cost: 0 });
 
-  while (pq.length > 0) {
-    // Extract min
-    pq.sort((a, b) => a.cost - b.cost);
-    const current = pq.shift()!;
+  while (heap.length > 0) {
+    const current = heapPop();
 
     if (visited.has(current.node)) continue;
     visited.add(current.node);
 
     if (current.node === target) break;
 
-    const neighbors = graph.adjacencyList.get(current.node) || [];
+    const neighbors = graph.adjacencyList.get(current.node);
+    if (!neighbors) continue;
     for (const edge of neighbors) {
       if (visited.has(edge.to)) continue;
-      const newDist = dist.get(current.node)! + edge.weight;
+      const newDist = current.cost + edge.weight;
       if (newDist < dist.get(edge.to)!) {
         dist.set(edge.to, newDist);
         prev.set(edge.to, current.node);
-        pq.push({ node: edge.to, cost: newDist });
+        heapPush({ node: edge.to, cost: newDist });
       }
     }
   }
