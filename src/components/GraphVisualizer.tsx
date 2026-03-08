@@ -153,7 +153,14 @@ const GraphVisualizer = ({ graph, edges, pathNodes = [] }: GraphVisualizerProps)
   }, [graph, edges, pathNodes]);
 
   return (
-    <div className="overflow-auto rounded-lg border border-border bg-card/50 p-2">
+    <div ref={containerRef} className="relative overflow-auto rounded-lg border border-border bg-card/50 p-2">
+      <button
+        onClick={toggleFullscreen}
+        className="absolute top-3 right-3 z-10 rounded-md border border-border bg-secondary/80 p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+        title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+      >
+        {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+      </button>
       <canvas ref={canvasRef} className="mx-auto block" />
     </div>
   );
