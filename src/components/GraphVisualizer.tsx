@@ -1,4 +1,5 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
+import { Maximize, Minimize } from "lucide-react";
 import { type Graph, type GraphNode } from "@/lib/graph";
 
 interface GraphVisualizerProps {
