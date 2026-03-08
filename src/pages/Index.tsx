@@ -77,10 +77,10 @@ const Index = () => {
       {/* Header */}
       <header className="mb-8 text-center">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight font-[var(--font-display)]">
-          <span className="text-primary text-glow">City Route Planner</span>
+          <span className="text-primary text-glow">Yerevan Route Planner</span>
         </h1>
         <p className="mt-2 text-sm text-muted-foreground font-mono">
-          Graph-based shortest path engine • Dijkstra & Bellman-Ford
+          Graph-based shortest path engine • Yerevan, Armenia • Dijkstra & Bellman-Ford
         </p>
       </header>
 
@@ -347,7 +347,7 @@ const Index = () => {
                 <p className="text-muted-foreground text-xs mt-1">
                   {cityNodes.length} nodes (locations) • {cityEdges.length} directed edges (roads)
                   <br />
-                  Weighted directed graph modelling a fictional city road network.
+                  Weighted directed graph modelling Yerevan's road network (travel time in minutes).
                 </p>
               </div>
             </div>
