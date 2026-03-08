@@ -6,6 +6,7 @@ interface GraphVisualizerProps {
   graph: Graph;
   edges: { from: string; to: string; weight: number }[];
   pathNodes?: string[];
+  fullscreenControls?: React.ReactNode;
 }
 
 const GraphVisualizer = ({ graph, edges, pathNodes = [] }: GraphVisualizerProps) => {
