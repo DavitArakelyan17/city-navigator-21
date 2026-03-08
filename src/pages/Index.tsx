@@ -293,36 +293,166 @@ const Index = () => {
             edges={cityEdges}
             pathNodes={displayPath}
             fullscreenControls={
-              <div className="panel-glass rounded-lg p-3 space-y-2 min-w-[240px]">
-                <div className="space-y-1">
-                  <label className="text-[10px] text-muted-foreground font-mono">Start Point</label>
-                  <select
-                    value={source}
-                    onChange={(e) => setSource(e.target.value)}
-                    className="w-full rounded-md border border-border bg-secondary px-2 py-1 text-xs text-secondary-foreground font-mono focus:outline-none focus:ring-1 focus:ring-primary"
-                  >
-                    <option value="">Select…</option>
-                    {nodeIds.map((id) => (
-                      <option key={id} value={id}>{id} — {labelFor(id)}</option>
-                    ))}
-                  </select>
+              <div className="space-y-2 w-[260px]">
+                {/* Route Query */}
+                <div className="panel-glass rounded-lg p-3 space-y-2 backdrop-blur-md">
+                  <h2 className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                    <MapPin className="h-3 w-3 text-primary" /> Route Query
+                  </h2>
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-muted-foreground font-mono">Start Point</label>
+                    <select
+                      value={source}
+                      onChange={(e) => setSource(e.target.value)}
+                      className="w-full rounded-md border border-border bg-secondary px-2 py-1 text-xs text-secondary-foreground font-mono focus:outline-none focus:ring-1 focus:ring-primary"
+                    >
+                      <option value="">Select…</option>
+                      {nodeIds.map((id) => (
+                        <option key={id} value={id}>{id} — {labelFor(id)}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-muted-foreground font-mono">Destination</label>
+                    <select
+                      value={target}
+                      onChange={(e) => setTarget(e.target.value)}
+                      className="w-full rounded-md border border-border bg-secondary px-2 py-1 text-xs text-secondary-foreground font-mono focus:outline-none focus:ring-1 focus:ring-primary"
+                    >
+                      <option value="">Select…</option>
+                      {nodeIds.map((id) => (
+                        <option key={id} value={id}>{id} — {labelFor(id)}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {/* Algorithm selector */}
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-muted-foreground font-mono">Algorithm</label>
+                    <div className="flex gap-1.5">
+                      <button
+                        onClick={() => setAlgorithm("dijkstra")}
+                        className={`flex-1 rounded-md border px-2 py-1 text-[10px] font-mono transition-colors ${
+                          algorithm === "dijkstra"
+                            ? "border-primary bg-primary/15 text-primary"
+                            : "border-border bg-secondary text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        Dijkstra
+                      </button>
+                      <button
+                        onClick={() => setAlgorithm("bellman-ford")}
+                        className={`flex-1 rounded-md border px-2 py-1 text-[10px] font-mono transition-colors ${
+                          algorithm === "bellman-ford"
+                            ? "border-primary bg-primary/15 text-primary"
+                            : "border-border bg-secondary text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        Bellman-Ford
+                      </button>
+                    </div>
+                  </div>
+                  {error && <p className="text-[10px] text-destructive font-mono">{error}</p>}
+                  <Button onClick={handleFindPath} size="sm" className="w-full gap-1 text-xs">
+                    <Route className="h-3 w-3" /> Find Shortest Path
+                  </Button>
+                  <div className="flex gap-1.5">
+                    <Button variant="outline" size="sm" onClick={handleCompare} className="flex-1 gap-1 text-[10px] h-7">
+                      <BarChart3 className="h-3 w-3" /> Compare
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={handleAltRoutes} className="flex-1 gap-1 text-[10px] h-7">
+                      <Zap className="h-3 w-3" /> Top 3
+                    </Button>
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] text-muted-foreground font-mono">Destination</label>
-                  <select
-                    value={target}
-                    onChange={(e) => setTarget(e.target.value)}
-                    className="w-full rounded-md border border-border bg-secondary px-2 py-1 text-xs text-secondary-foreground font-mono focus:outline-none focus:ring-1 focus:ring-primary"
-                  >
-                    <option value="">Select…</option>
-                    {nodeIds.map((id) => (
-                      <option key={id} value={id}>{id} — {labelFor(id)}</option>
+
+                {/* Results in fullscreen */}
+                {result && result.result.found && (
+                  <div className="panel-glass rounded-lg p-3 space-y-2 backdrop-blur-md">
+                    <h2 className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                      <Route className="h-3 w-3 text-accent" /> Result
+                    </h2>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] text-muted-foreground font-mono">Cost</span>
+                      <span className="text-lg font-bold text-primary text-glow font-mono">{result.result.cost}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] text-muted-foreground font-mono">Algorithm</span>
+                      <span className="text-[10px] text-foreground font-mono">{result.algorithm}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] text-muted-foreground font-mono flex items-center gap-1">
+                        <Clock className="h-2.5 w-2.5" /> Time
+                      </span>
+                      <span className="text-[10px] text-foreground font-mono">{result.executionTimeMs.toFixed(3)} ms</span>
+                    </div>
+                    <div className="flex flex-wrap gap-0.5">
+                      {result.result.path.map((id, i) => (
+                        <span key={i} className="inline-flex items-center gap-0.5">
+                          <span className="rounded bg-primary/20 px-1 py-0.5 text-[10px] font-mono text-primary">{id}</span>
+                          {i < result.result.path.length - 1 && <span className="text-muted-foreground text-[10px]">→</span>}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Comparison in fullscreen */}
+                {comparison && (
+                  <div className="panel-glass rounded-lg p-3 space-y-2 backdrop-blur-md">
+                    <h2 className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                      <BarChart3 className="h-3 w-3 text-warning" /> Comparison
+                    </h2>
+                    {[comparison.dijkstra, comparison.bellmanFord].map((r, i) => (
+                      <div key={i} className="rounded-md border border-border bg-secondary/50 p-2 space-y-1">
+                        <div className="flex justify-between">
+                          <span className="text-[10px] font-mono text-foreground">{r.algorithm}</span>
+                          <span className="text-[10px] font-mono text-primary">{r.executionTimeMs.toFixed(3)} ms</span>
+                        </div>
+                        <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all"
+                            style={{
+                              width: `${Math.min(100, (r.executionTimeMs / Math.max(comparison.dijkstra.executionTimeMs, comparison.bellmanFord.executionTimeMs)) * 100)}%`,
+                              background: i === 0 ? "hsl(160, 80%, 45%)" : "hsl(200, 85%, 55%)",
+                            }}
+                          />
+                        </div>
+                        <p className="text-[9px] text-muted-foreground font-mono">
+                          Cost: {r.result.found ? r.result.cost : "N/A"} • Steps: {r.result.path.length}
+                        </p>
+                      </div>
                     ))}
-                  </select>
-                </div>
-                <Button onClick={handleFindPath} size="sm" className="w-full gap-1 text-xs">
-                  <Route className="h-3 w-3" /> Find Path
-                </Button>
+                  </div>
+                )}
+
+                {/* Alt routes in fullscreen */}
+                {altRoutes.length > 0 && (
+                  <div className="panel-glass rounded-lg p-3 space-y-1.5 backdrop-blur-md">
+                    <h2 className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                      Top {altRoutes.length} Routes
+                    </h2>
+                    {altRoutes.map((route, i) => (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          setActiveAltIndex(i);
+                          setResult({ result: route, executionTimeMs: 0, algorithm: "K-Shortest" });
+                        }}
+                        className={`w-full text-left rounded-md border p-1.5 text-[10px] font-mono transition-colors ${
+                          i === activeAltIndex
+                            ? "border-accent bg-accent/10 text-accent"
+                            : "border-border bg-secondary/50 text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        <div className="flex justify-between">
+                          <span>Route {i + 1}</span>
+                          <span>Cost: {route.cost}</span>
+                        </div>
+                        <div className="mt-0.5 text-[9px]">{route.path.join(" → ")}</div>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             }
           />
