@@ -9,7 +9,7 @@ interface GraphVisualizerProps {
   fullscreenControls?: React.ReactNode;
 }
 
-const GraphVisualizer = ({ graph, edges, pathNodes = [] }: GraphVisualizerProps) => {
+const GraphVisualizer = ({ graph, edges, pathNodes = [], fullscreenControls }: GraphVisualizerProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
