@@ -94,7 +94,7 @@ const Index = () => {
             </h2>
 
             <div className="space-y-2">
-              <label className="text-xs text-muted-foreground font-mono">Source</label>
+              <label className="text-xs text-muted-foreground font-mono">Start Point</label>
               <select
                 value={source}
                 onChange={(e) => setSource(e.target.value)}
