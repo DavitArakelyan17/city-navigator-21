@@ -347,7 +347,7 @@ const Index = () => {
                 <p className="text-muted-foreground text-xs mt-1">
                   {cityNodes.length} nodes (locations) • {cityEdges.length} directed edges (roads)
                   <br />
-                  Weighted directed graph modelling a fictional city road network.
+                  Weighted directed graph modelling Yerevan's road network (travel time in minutes).
                 </p>
               </div>
             </div>
