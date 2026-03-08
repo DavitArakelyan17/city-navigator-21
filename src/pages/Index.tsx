@@ -77,10 +77,10 @@ const Index = () => {
       {/* Header */}
       <header className="mb-8 text-center">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight font-[var(--font-display)]">
-          <span className="text-primary text-glow">City Route Planner</span>
+          <span className="text-primary text-glow">Yerevan Route Planner</span>
         </h1>
         <p className="mt-2 text-sm text-muted-foreground font-mono">
-          Graph-based shortest path engine • Dijkstra & Bellman-Ford
+          Graph-based shortest path engine • Yerevan, Armenia • Dijkstra & Bellman-Ford
         </p>
       </header>
 
