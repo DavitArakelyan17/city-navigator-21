@@ -9,7 +9,24 @@ interface GraphVisualizerProps {
 }
 
 const GraphVisualizer = ({ graph, edges, pathNodes = [] }: GraphVisualizerProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const toggleFullscreen = useCallback(() => {
+    if (!containerRef.current) return;
+    if (!document.fullscreenElement) {
+      containerRef.current.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }, []);
+
+  useEffect(() => {
+    const handler = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", handler);
+    return () => document.removeEventListener("fullscreenchange", handler);
+  }, []);
 
   const nodeMap = new Map<string, GraphNode>();
   for (const n of graph.nodes) nodeMap.set(n.id, n);
